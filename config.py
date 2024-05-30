@@ -4,3 +4,4 @@ headers = {
 
 base_url = "https://nyahentai.biz"
 database = "./cover_link.yaml"
+log_base = "./logs"
