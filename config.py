@@ -3,5 +3,5 @@ headers = {
 }
 
 base_url = "https://nyahentai.biz"
-database = "./cover_link.yaml"
+database = "./comic_set.yaml"
 log_base = "./logs"

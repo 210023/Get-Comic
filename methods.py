@@ -145,5 +145,4 @@ def get_comic_list(keyword, page):
         log_error(f"request fail: {response.status_code}")
     else:
         log_info(f"request success: {response.status_code}")
-        clear_yaml(database)
         write_comic(keyword, page, extract_cover_url(response), database)
