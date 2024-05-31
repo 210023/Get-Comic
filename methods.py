@@ -143,6 +143,9 @@ def get_comic_list(keyword, page):
     response = requests.get(target, headers=headers)
     if not response.ok:
         log_error(f"request fail: {response.status_code}")
+        print("request fail, access logs for more infomation")
     else:
         log_info(f"request success: {response.status_code}")
+        clear_yaml(database) # comic_set.yaml only stores info of keyword on a certain page
         write_comic(keyword, page, extract_cover_url(response), database)
+        print("comic set refreshed")

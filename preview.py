@@ -18,7 +18,6 @@ with gr.Blocks() as preview:
         chosen_id = gr.Textbox(label="id", interactive=True)
         download_btn = gr.Button("Download", interactive=True)
         def download(id):
-            download_btn.interactive=False
             print(f"attempt download {id}")
             i = 0
             for comic in comic_list:
@@ -26,7 +25,6 @@ with gr.Blocks() as preview:
                 i = i + 1
             link = comic_list[i]["link"]
             pic_download(gen_nyahentai(link)["img_link_list"], id)
-            download_btn.interactive=True
         download_btn.click(fn=download, inputs=chosen_id)
 
 

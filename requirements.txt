@@ -1,0 +1,6 @@
+python 3.10.12
+requests
+yaml
+os
+bs4
+gradio
