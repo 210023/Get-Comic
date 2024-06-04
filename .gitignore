@@ -2,6 +2,7 @@ __pycache__/
 download/
 logs/
 __pycache__/
+methods/target/
 
 sample_section.html
 another_source.html
