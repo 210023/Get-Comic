@@ -5,3 +5,7 @@
 ### 2024.6.4
 
   still learning rust. succeed in getting source code from nyahentai.biz, next will try to parse it and get comic_set like what I did in py-version.
+
+### 2024.6.22
+
+  finish get_pic_link function which extracts pictures from select comic addr
