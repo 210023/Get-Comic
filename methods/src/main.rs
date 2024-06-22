@@ -29,9 +29,11 @@ fn load_info(keyword: String, page: u64) {
     let content = resp.text().unwrap();
     // html source code has been saved in source.html
     //let path = Path::new("/home/lagrange/Desktop/NJU/learn_rust/source.html");
+    /*
     let path = Path::new("D:\\NJU\\get_comic\\source.html");
     let mut file = File::create(&path).unwrap();
     file.write(content.as_bytes()).unwrap();
+    */
     // select <article section and get id, title, addr
     let article_selector = Selector::parse("article").unwrap();
     let document = Html::parse_document(&content);
@@ -107,7 +109,7 @@ fn load_info(keyword: String, page: u64) {
 }
 
 
-// establish ProgressSpinner
+// establish ProgressSpinner, test cases only
 fn gen_pb() {
     let spinner_style = ProgressStyle::default_spinner().tick_chars("⠁⠂⠄⡀⢀⠠⠐⠈ ");
     let pb = ProgressBar::new_spinner();
@@ -124,10 +126,11 @@ fn get_pic(addr: String, id: String) {
     println!("fetch pic from addr: {}", addr);
     let resp = reqwest::blocking::get(addr).expect("bad parameter addr in get_pic");
     let content = resp.text().unwrap(); // source code of comic page
+    /*
     let path = Path::new("D:\\NJU\\get_comic\\sample_section.html");
     let mut file = File::create(&path).unwrap();
     file.write(content.as_bytes()).unwrap();
-
+    */
     let dir_path = String::from("D:\\NJU\\get_comic\\download\\") + &id;
     let mk = fs::create_dir(Path::new(&dir_path));
 
@@ -141,11 +144,16 @@ fn get_pic(addr: String, id: String) {
     let img_selector = Selector::parse("img").unwrap();
     let all_img = document.select(&img_selector);
 
+    let mut img_num = 0;
+    let mut pic_list = Vec::new();
+
     for img in all_img {
         let pic_link = img.value().attr("data-lazy-src");
         if let Some(valid_link) = pic_link {
             if valid_link.contains("cdn") {
-                println!("{valid_link}");
+                img_num = img_num + 1;
+                //println!("{valid_link}");
+                pic_list.push(String::from(valid_link));
             } else {
                 // do nothing 
             }
@@ -153,9 +161,48 @@ fn get_pic(addr: String, id: String) {
             // do nothig 
         }
     }
+
+    let mut digit_num = 0;
+    let mut tmp = img_num;
+
+    while tmp > 0 {
+        tmp = tmp / 10;
+        digit_num = digit_num + 1;
+    }
+
+    let mut pic_cnt = 0;
+
+    let pb = ProgressBar::new(img_num);
+
+    for link in pic_list {
+        pic_cnt = pic_cnt + 1;
+        let mut digit_len = 0;
+        let mut tmp = pic_cnt;
+        while tmp > 0 {
+            digit_len = digit_len + 1;
+            tmp = tmp / 10;
+        }
+        let mut pic_name = pic_cnt.to_string();
+        while digit_len < digit_num {
+            pic_name = String::from("0") + &pic_name;
+            digit_len = digit_len + 1;
+        }
+
+        //println!("{}: {}", pic_name, link);
+        let pic_path = dir_path.clone() + &String::from("\\") + &pic_name + &String::from(".jpg");
+        let mut pic = File::create(&Path::new(&pic_path)).unwrap();
+
+        reqwest::blocking::get(link)
+            .expect("bad picture addr")
+            .copy_to(&mut pic)
+            .unwrap();
+    
+        pb.inc(1);
+    }
+    pb.finish_with_message("all downloaded");
 }
 
 fn main() {
     //load_info(String::from("boudica"), 1); // do not run this function when testing pic-downloading function
-    get_pic(String::from("https://nyahentai.biz/2023-boudica-san-mi.html"), String::from("post-159850"));
+    get_pic(String::from("https://nyahentai.biz/2022-boudica-orusuban-o-suru-boudica-x27-s-house-sitting.html"), String::from("post-128183"));
 }
