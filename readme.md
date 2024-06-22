@@ -9,3 +9,10 @@
 ### 2024.6.22
 
   finish get_pic_link function which extracts pictures from select comic addr
+  
+  finish get_pic function; 
+  
+  **to do**:
+
+    add log function
+    save all functions as a lib 
